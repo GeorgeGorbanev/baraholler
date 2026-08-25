@@ -34,12 +34,16 @@ func (e *loggerError) Unwrap() error {
 }
 
 func main() {
+	os.Exit(run())
+}
+
+func run() int {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
 	err := execute(ctx, os.Args[1:], os.Stdin, os.Stdout, os.Stderr)
 	if err == nil || errors.Is(err, flag.ErrHelp) || errors.Is(err, context.Canceled) {
-		return
+		return 0
 	}
 
 	logger := logging.New(os.Stderr, slog.LevelInfo, logging.FormatCompact)
@@ -48,7 +52,7 @@ func main() {
 		logger = contextualError.logger
 	}
 	logger.Error("baraholler failed", "error", err)
-	os.Exit(1)
+	return 1
 }
 
 func execute(ctx context.Context, args []string, input io.Reader, output, errorOutput io.Writer) error {

@@ -94,7 +94,7 @@ func (o *Observer) Run(ctx context.Context) error {
 		UserAccessHasher: store,
 		OnChannelTooLong: func(channelID int64) {
 			if value := recoverer.Load(); value != nil {
-				configured, err := value.Enqueue(channelID)
+				configured, err := value.Enqueue(ctx, channelID)
 				if err != nil {
 					o.logger.Error("history recovery scheduling failed",
 						"channel_id", channelID,

@@ -32,7 +32,9 @@ func TestStorePersistsDeliveryAndAccessHashes(t *testing.T) {
 
 	store, err = Open(path)
 	require.NoError(t, err)
-	defer store.Close()
+	t.Cleanup(func() {
+		require.NoError(t, store.Close())
+	})
 	delivered, err := store.Delivered(t.Context(), key)
 	require.NoError(t, err)
 	require.True(t, delivered)
@@ -66,7 +68,9 @@ func TestDeliveryKeysAreIsolated(t *testing.T) {
 
 	store, err := Open(filepath.Join(t.TempDir(), "state.db"))
 	require.NoError(t, err)
-	defer store.Close()
+	t.Cleanup(func() {
+		require.NoError(t, store.Close())
+	})
 	base := DeliveryKey{Rule: "one", SourceID: 42, MessageID: 7, NotifierID: "telegram"}
 	require.NoError(t, store.MarkDelivered(t.Context(), base))
 	variants := []DeliveryKey{
@@ -104,7 +108,9 @@ func TestStorePersistsPendingDeliveries(t *testing.T) {
 
 	store, err = Open(path)
 	require.NoError(t, err)
-	defer store.Close()
+	t.Cleanup(func() {
+		require.NoError(t, store.Close())
+	})
 	got, found, err := store.PendingDelivery(t.Context(), key)
 	require.NoError(t, err)
 	require.True(t, found)

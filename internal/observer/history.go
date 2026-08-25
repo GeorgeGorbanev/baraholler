@@ -115,7 +115,7 @@ func (r *historyRecoverer) Initialize(ctx context.Context) error {
 	return nil
 }
 
-func (r *historyRecoverer) Enqueue(sourceID int64) (bool, error) {
+func (r *historyRecoverer) Enqueue(ctx context.Context, sourceID int64) (bool, error) {
 	if _, ok := r.sources[sourceID]; !ok {
 		return false, nil
 	}
@@ -124,7 +124,7 @@ func (r *historyRecoverer) Enqueue(sourceID int64) (bool, error) {
 	if _, ok := r.pending[sourceID]; ok {
 		return true, nil
 	}
-	afterMessageID, found, err := r.store.SourceMessageID(context.Background(), sourceID)
+	afterMessageID, found, err := r.store.SourceMessageID(ctx, sourceID)
 	if err != nil {
 		return true, fmt.Errorf("source message position load failed: %w", err)
 	}

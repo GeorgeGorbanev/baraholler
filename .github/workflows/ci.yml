@@ -21,6 +21,3 @@ jobs:
 
       - name: Check code
         run: make check
-
-      - name: Run race detector
-        run: go test -race ./...

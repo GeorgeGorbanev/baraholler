@@ -42,7 +42,7 @@ func (g *GotdGateway) Forward(
 ) error {
 	if _, err := g.sender.To(recipient).ForwardIDs(source, messageID).Send(ctx); err != nil {
 		if tgerr.Is(err, "CHAT_FORWARDS_RESTRICTED") {
-			return fmt.Errorf("%w: %v", ErrForwardsRestricted, err)
+			return fmt.Errorf("%w: %w", ErrForwardsRestricted, err)
 		}
 		return fmt.Errorf("telegram message forward failed: %w", err)
 	}

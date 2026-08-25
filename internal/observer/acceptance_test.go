@@ -92,7 +92,9 @@ rules:
 	require.NoError(t, err)
 	retryStore, err := state.Open(statePath)
 	require.NoError(t, err)
-	defer retryStore.Close()
+	t.Cleanup(func() {
+		require.NoError(t, retryStore.Close())
+	})
 	retryProcessor := newProcessor(retryRoutes, retryStore, slog.New(slog.NewTextHandler(io.Discard, nil)))
 	retryProcessor.now = func() time.Time { return firstAttempt.Add(deliveryRetryInitialDelay) }
 

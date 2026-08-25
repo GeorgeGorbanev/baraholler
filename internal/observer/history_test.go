@@ -115,17 +115,17 @@ func TestHistoryRecovererDeduplicatesQueuedSource(t *testing.T) {
 	routes := testHistoryRoutes(&recordingNotifier{id: "telegram"})
 	recoverer := newHistoryRecoverer(&fakeHistoryAPI{}, routes, newProcessor(routes, store, discardLogger()), store, discardLogger())
 
-	configured, err := recoverer.Enqueue(42)
+	configured, err := recoverer.Enqueue(t.Context(), 42)
 	require.NoError(t, err)
 	require.True(t, configured)
-	configured, err = recoverer.Enqueue(42)
+	configured, err = recoverer.Enqueue(t.Context(), 42)
 	require.NoError(t, err)
 	require.True(t, configured)
 	require.NoError(t, store.AdvanceSourceMessageID(t.Context(), 42, 200))
 	require.Len(t, recoverer.requests, 1)
 	request := <-recoverer.requests
 	require.Equal(t, 100, request.afterMessageID)
-	configured, err = recoverer.Enqueue(99)
+	configured, err = recoverer.Enqueue(t.Context(), 99)
 	require.NoError(t, err)
 	require.False(t, configured)
 }

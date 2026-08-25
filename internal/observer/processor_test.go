@@ -263,7 +263,9 @@ func TestProcessorRetriesOnlyFailedNotifierAfterRestart(t *testing.T) {
 
 	retryStore, err := state.Open(statePath)
 	require.NoError(t, err)
-	defer retryStore.Close()
+	t.Cleanup(func() {
+		require.NoError(t, retryStore.Close())
+	})
 	retried := &recordingNotifier{id: "telegram"}
 	alreadyDelivered := &recordingNotifier{id: "macos"}
 	retryRoutes := map[int64][]route{42: {{
