@@ -1,0 +1,7 @@
+config.yml
+.data/
+bin/
+/baraholler
+*.test
+*.out
+.DS_Store

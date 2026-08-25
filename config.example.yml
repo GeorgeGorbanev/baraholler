@@ -1,0 +1,38 @@
+# Telegram user-account credentials.
+# Create your own api_id and api_hash at https://my.telegram.org/apps.
+telegram:
+  api_id: 0
+  api_hash: ""
+  # Use the international E.164 format, for example +995555123456.
+  phone: "+10000000000"
+  # This file grants access to your Telegram account. Never share or commit it.
+  session_path: ".data/telegram.session"
+
+# Persistent update-recovery, peer-cache, and notification-delivery state.
+storage:
+  state_path: ".data/baraholler.db"
+
+# Supported levels: debug, info, warn, error.
+# Supported formats: compact, json. Compact is the default.
+logging:
+  level: "info"
+  format: "compact"
+
+rules:
+  - name: "example-rule"
+    # Join every source with this Telegram account before starting Baraholler.
+    # Version 1 supports public username-based t.me links only.
+    sources:
+      - "https://t.me/sample_baraholka"
+    # A rule matches when any term occurs in the message text or media caption.
+    # Matching is Unicode-aware and case-insensitive.
+    terms:
+      - "macbook"
+      - "mac book"
+    notifications:
+      telegram:
+        enabled: true
+        # Use @username or a public https://t.me/username link.
+        recipient: "@recipient_username"
+      macos:
+        enabled: false
